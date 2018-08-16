@@ -107,12 +107,11 @@ if (isDev) {
   })
   config.plugins.push(
     // webpack-dev-server hot
-    new webpack.HotModuleReplacementPlugin(),
-    new ExtractTextWebpackPlugin('styles.[hash:8].css')
+    new webpack.HotModuleReplacementPlugin()
   )
 } else {
   config.entry = {
-    app: path.join(__dirname, 'src/index.js'),
+    app: resolve('src/index.js'),
     vender: ['vue']
   }
   // 把manifest提取出来，避免模块
