@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack --config webpack.config.js",
-    "dev": "cross-env NODE_ENV=development webpack-dev-server --mode=production --config webpack.config.js"
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --mode=production --config webpack.config.js",
+    "commit": "npm install -g commitizen && commitizen init cz-conventional-changelog --save-dev --save-exact",
+    "lint": "eslint --ext .js --ext .jsx --ext .vue .",
+    "lint-fix": "eslint --fix --ext .js --ext .jsx --ext .vue .",
+    "precommit": "lint-staged"
   },
   "repository": "https://github.com/zhao-jun/vue-ssr-kit.git",
   "author": "zhao-jun",
@@ -16,16 +20,29 @@
   "devDependencies": {
     "autoprefixer": "^9.1.1",
     "babel-core": "^6.26.3",
+    "babel-eslint": "^8.2.6",
     "babel-loader": "^7.1.5",
     "babel-preset-env": "^1.7.0",
     "cross-env": "^5.2.0",
     "css-loader": "^1.0.0",
+    "cz-conventional-changelog": "^2.1.0",
+    "eslint": "^5.3.0",
+    "eslint-config-standard": "^12.0.0-alpha.0",
+    "eslint-loader": "^2.1.0",
+    "eslint-plugin-html": "^4.0.5",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-node": "^7.0.1",
+    "eslint-plugin-promise": "^3.8.0",
+    "eslint-plugin-standard": "^3.1.0",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "file-loader": "^1.1.11",
     "html-webpack-plugin": "^3.2.0",
+    "husky": "^0.14.3",
     "less": "^3.8.1",
     "less-loader": "^4.1.0",
+    "lint-staged": "^7.2.2",
     "postcss-loader": "^3.0.0",
+    "prettier": "^1.14.2",
     "url-loader": "^1.0.1",
     "vue-loader": "^15.3.0",
     "vue-style-loader": "^4.1.2",
@@ -33,5 +50,16 @@
     "webpack": "^4.16.5",
     "webpack-cli": "^3.1.0",
     "webpack-dev-server": "^3.1.5"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write",
+      "git add"
+    ]
   }
 }
