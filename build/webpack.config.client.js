@@ -7,6 +7,10 @@ const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin')
 const basicConfig = require('./webpack.config.base')
 
 const isDev = process.env.NODE_ENV === 'development'
+// css module开发和生产命名区分
+const localIdentName = isDev
+  ? '[path][name]-[local]-[hash:base64:5]'
+  : '[hash:base64:5]'
 
 // 便于以后统一修改路径
 function resolve(dir) {
@@ -44,7 +48,15 @@ if (isDev) {
           test: /\.less$/,
           use: [
             'vue-style-loader',
-            'css-loader',
+            // 原来vue-loader css-module配置移到这
+            {
+              loader: 'css-loader',
+              options: {
+                modules: true,
+                localIdentName,
+                camelCase: true // 驼峰
+              }
+            },
             'postcss-loader',
             'less-loader'
           ],
@@ -75,7 +87,18 @@ if (isDev) {
           // 生产环境提取css
           use: ExtractTextWebpackPlugin.extract({
             fallback: 'vue-style-loader',
-            use: ['css-loader', 'postcss-loader', 'less-loader']
+            use: [
+              {
+                loader: 'css-loader',
+                options: {
+                  modules: true,
+                  localIdentName,
+                  camelCase: true // 驼峰
+                }
+              },
+              'postcss-loader',
+              'less-loader'
+            ]
           }),
           include: [resolve('src'), resolve('test')]
         }

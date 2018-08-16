@@ -1,11 +1,17 @@
 <template>
-  <div class="text">
+  <div :class="$style.textA">
     {{text}}
+    <Home home='ssr home' />
   </div>
 </template>
 
 <script>
+import Home from './views/home.vue'
+
 export default {
+  components: {
+    Home
+  },
   data () {
     return {
       text: 'vue-ssr'
@@ -17,10 +23,10 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less" scoped module>
 body {
   color: blue;
-  .text {
+  .text-a {
     transform:translateX(50px);
   }
 }

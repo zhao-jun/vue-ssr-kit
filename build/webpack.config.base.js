@@ -1,4 +1,5 @@
 const path = require('path')
+const vueLoaderConfig = require('./vue-loader.conf')
 
 // 便于以后统一修改路径
 function resolve(dir) {
@@ -27,6 +28,7 @@ module.exports = {
         test: /\.vue$/,
         // 依赖css-loader、vue-template-compiler
         loader: 'vue-loader',
+        options: vueLoaderConfig,
         include: [resolve('src'), resolve('test')]
         // 推荐include
         // exclude: /node_modules/
