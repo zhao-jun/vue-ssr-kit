@@ -11,17 +11,17 @@ module.exports = {
   // webpack4新增
   mode: process.env.NODE_ENV || 'development',
   target: 'web', // 默认值
-  entry: resolve('src/index.js'),
+  entry: resolve('client/index.js'),
   output: {
     filename: 'bundle.js',
-    path: resolve('dist')
+    path: resolve('client-dist')
   },
   module: {
     rules: [
       {
         test: /\.(vue|js|jsx)$/,
         loader: 'eslint-loader',
-        include: [resolve('src'), resolve('test')],
+        include: [resolve('client'), resolve('test')],
         enforce: 'pre'
       },
       {
@@ -29,7 +29,7 @@ module.exports = {
         // 依赖css-loader、vue-template-compiler
         loader: 'vue-loader',
         options: vueLoaderConfig,
-        include: [resolve('src'), resolve('test')]
+        include: [resolve('client'), resolve('test')]
         // 推荐include
         // exclude: /node_modules/
       },
@@ -38,7 +38,7 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        include: [resolve('src'), resolve('test')]
+        include: [resolve('client'), resolve('test')]
       },
       {
         test: /\.(gif|jpg|jpeg|png|svg)$/,

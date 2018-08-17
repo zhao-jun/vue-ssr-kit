@@ -2,6 +2,7 @@ const path = require('path')
 const webpack = require('webpack')
 const webpackMerge = require('webpack-merge')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
 const VueLoaderPlugin = require('vue-loader/lib/plugin') // vue-loader v15新增
 const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin')
 const basicConfig = require('./webpack.config.base')
@@ -26,7 +27,9 @@ const defaultPlugins = [
     'process.env': {
       NODE_ENV: isDev ? '"development"' : '"production"'
     }
-  })
+  }),
+  // 生成 `vue-ssr-client-manifest.json`。
+  new VueSSRClientPlugin()
 ]
 
 const devServer = {
@@ -60,7 +63,7 @@ if (isDev) {
             'postcss-loader',
             'less-loader'
           ],
-          include: [resolve('src'), resolve('test')]
+          include: [resolve('client'), resolve('test')]
         }
       ]
     },
@@ -73,7 +76,7 @@ if (isDev) {
 } else {
   config = webpackMerge(basicConfig, {
     entry: {
-      app: resolve('src/index.js'),
+      app: resolve('client/index.js'),
       vender: ['vue']
     },
     output: {
@@ -100,7 +103,7 @@ if (isDev) {
               'less-loader'
             ]
           }),
-          include: [resolve('src'), resolve('test')]
+          include: [resolve('client'), resolve('test')]
         }
       ]
     },

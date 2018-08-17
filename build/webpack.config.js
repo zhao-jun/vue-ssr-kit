@@ -15,7 +15,7 @@ const config = {
   // webpack4新增
   mode: process.env.NODE_ENV || 'development',
   target: 'web', // 默认值
-  entry: resolve('src/index.js'),
+  entry: resolve('client/index.js'),
   output: {
     filename: 'bundle.js',
     path: resolve('dist')
@@ -25,14 +25,14 @@ const config = {
       {
         test: /\.(vue|js|jsx)$/,
         loader: 'eslint-loader',
-        include: [resolve('src'), resolve('test')],
+        include: [resolve('client'), resolve('test')],
         enforce: 'pre'
       },
       {
         test: /\.vue$/,
         // 依赖css-loader、vue-template-compiler
         loader: 'vue-loader',
-        include: [resolve('src'), resolve('test')]
+        include: [resolve('client'), resolve('test')]
         // 推荐include
         // exclude: /node_modules/
       },
@@ -41,7 +41,7 @@ const config = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        include: [resolve('src'), resolve('test')]
+        include: [resolve('client'), resolve('test')]
       },
       // 它会应用到普通的 `.css` 文件
       // 以及 `.vue` 文件中的 `<style>` 块
@@ -103,7 +103,7 @@ if (isDev) {
   config.module.rules.push({
     test: /\.less$/,
     use: ['vue-style-loader', 'css-loader', 'postcss-loader', 'less-loader'],
-    include: [resolve('src'), resolve('test')]
+    include: [resolve('client'), resolve('test')]
   })
   config.plugins.push(
     // webpack-dev-server hot
@@ -111,7 +111,7 @@ if (isDev) {
   )
 } else {
   config.entry = {
-    app: resolve('src/index.js'),
+    app: resolve('client/index.js'),
     vender: ['vue']
   }
   // 把manifest提取出来，避免模块
@@ -132,7 +132,7 @@ if (isDev) {
       fallback: 'vue-style-loader',
       use: ['css-loader', 'postcss-loader', 'less-loader']
     }),
-    include: [resolve('src'), resolve('test')]
+    include: [resolve('client'), resolve('test')]
   })
   config.plugins.push(new ExtractTextWebpackPlugin('styles.[hash:8].css'))
 }
