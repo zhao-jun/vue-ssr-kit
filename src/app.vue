@@ -1,16 +1,16 @@
 <template>
   <div :class="$style.textA">
-    {{text}}
-    <Home home='ssr home' />
+    <Header header='ssr header' />
+    <router-view />
   </div>
 </template>
 
 <script>
-import Home from './views/home.vue'
+import Header from './layout/header.vue'
 
 export default {
   components: {
-    Home
+    Header
   },
   data () {
     return {
@@ -18,7 +18,6 @@ export default {
     }
   },
   mounted () {
-    console.log(process.env)
   }
 }
 </script>
