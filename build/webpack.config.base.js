@@ -11,10 +11,11 @@ module.exports = {
   // webpack4新增
   mode: process.env.NODE_ENV || 'development',
   target: 'web', // 默认值
-  entry: resolve('client/index.js'),
+  entry: resolve('client/client-entry.js'),
   output: {
     filename: 'bundle.js',
-    path: resolve('client-dist')
+    path: resolve('client-dist'),
+    publicPath: 'http://127.0.0.1:8000/'
   },
   module: {
     rules: [

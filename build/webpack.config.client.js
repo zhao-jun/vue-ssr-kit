@@ -21,7 +21,9 @@ function resolve(dir) {
 const defaultPlugins = [
   // vue-loader v15 请确保引入这个插件！
   new VueLoaderPlugin(),
-  new HtmlWebpackPlugin(),
+  new HtmlWebpackPlugin({
+    template: resolve('build/template.html')
+  }),
   // 可以在前端代码中使用
   new webpack.DefinePlugin({
     'process.env': {
@@ -76,7 +78,7 @@ if (isDev) {
 } else {
   config = webpackMerge(basicConfig, {
     entry: {
-      app: resolve('client/index.js'),
+      app: resolve('client/client-entry.js'),
       vender: ['vue']
     },
     output: {

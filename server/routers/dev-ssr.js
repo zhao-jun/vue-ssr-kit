@@ -1,10 +1,12 @@
 const Router = require('koa-router')
 const webpack = require('webpack')
+const fs = require('fs')
 const MemoryFS = require('memory-fs')
+const axios = require('axios')
 const path = require('path')
 const { createBundleRenderer } = require('vue-server-renderer')
 
-const webpackServerConfig = require('./../../build/webpack.config.client')
+const webpackServerConfig = require('./../../build/webpack.config.server')
 
 const mfs = new MemoryFS()
 // webpack Compiler 实例
@@ -27,33 +29,47 @@ serverCompiler.watch({}, (err, stats) => {
     webpackServerConfig.output.path,
     'vue-ssr-server-bundle.json'
   )
-  // 读取vue-ssr-server-bundle.json
+  // 内存中读取vue-ssr-server-bundle.json
   bundle = JSON.parse(mfs.readFileSync(bundlePath, 'utf-8'))
   console.log('bundle generated')
 })
 
-const handleSSR = ctx => {
+const handleSSR = async ctx => {
   // 服务端初次打包未结束
   if (!bundle) {
-    ctx.body = 'bundle 不存在'
+    ctx.body = 'bundle 正在打包中...'
     return
   }
-
-  const clientManifest = require('../../client-dist/vue-ssr-client-manifest.json')
+  // vue-ssr-client-manifest.json在内存中，直接获取不到
+  // const clientManifest = require('../../client-dist/vue-ssr-client-manifest.json')
+  const clientManifestResp = await axios.get(
+    `http://127.0.0.1:8000/vue-ssr-client-manifest.json`
+  )
+  const clientManifest = clientManifestResp.data
 
   // todo
-  let template = require('../server.template.html')
+  let template = fs.readFileSync(
+    path.join(__dirname, '../server.template.html'),
+    'utf-8'
+  )
 
   // 自动注入
   const renderer = createBundleRenderer(bundle, {
     template,
     clientManifest
   })
-
-  renderer.renderToString({}, (err, html) => {
-    if (err) throw err
+  const context = { url: ctx.url }
+  // 错误写法，里面非同步，ctx赋值不了
+  // renderer.renderToString(context, (err, html) => {
+  //   if (err) throw err
+  //   ctx.body = html
+  // })
+  try {
+    let html = await renderer.renderToString(context)
     ctx.body = html
-  })
+  } catch (error) {
+    console.log('render error', err)
+  }
 }
 
 const router = new Router()
