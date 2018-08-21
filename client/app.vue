@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.textA">
-    <Header header='ssr header' />
+    <Header :header="header" />
     <router-view />
   </div>
 </template>
@@ -14,7 +14,7 @@ export default {
   },
   data () {
     return {
-      text: 'vue-ssr'
+      header: 'ssr header'
     }
   },
   mounted () {
