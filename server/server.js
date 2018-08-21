@@ -1,8 +1,16 @@
 const Koa = require('koa')
 const send = require('koa-send')
 const path = require('path')
+const render = require('koa-art-template')
 
 const app = new Koa()
+
+// 可以使用ejs等其他模版
+render(app, {
+  root: path.join(__dirname, 'views'),
+  extname: '.art',
+  debug: process.env.NODE_ENV !== 'production'
+})
 
 // favicon处理
 app.use(async (ctx, next) => {

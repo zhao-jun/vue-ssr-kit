@@ -5,7 +5,7 @@ const MemoryFS = require('memory-fs')
 const axios = require('axios')
 const path = require('path')
 const { createBundleRenderer } = require('vue-server-renderer')
-
+const templateRender = require('./template-render')
 const webpackServerConfig = require('./../../build/webpack.config.server')
 
 const mfs = new MemoryFS()
@@ -47,29 +47,37 @@ const handleSSR = async ctx => {
   )
   const clientManifest = clientManifestResp.data
 
-  // todo
-  let template = fs.readFileSync(
-    path.join(__dirname, '../server.template.html'),
-    'utf-8'
-  )
+  // // 使用页面模版
+  // let template = fs.readFileSync(
+  //   path.join(__dirname, '../views/template.html'),
+  //   'utf-8'
+  // )
 
-  // 自动注入
+  // // 自动注入
+  // const renderer = createBundleRenderer(bundle, {
+  //   template,
+  //   clientManifest
+  // })
+  // // 错误写法，里面非同步，ctx赋值不了
+  // // renderer.renderToString(context, (err, html) => {
+  // //   if (err) throw err
+  // //   ctx.body = html
+  // // })
+  // // 使用页面模版
+  // const context = { url: ctx.url }
+  // try {
+  //   let html = await renderer.renderToString(context)
+  //   ctx.body = html
+  // } catch (error) {
+  //   console.log('render error', error)
+  // }
+  // 手动注入
   const renderer = createBundleRenderer(bundle, {
-    template,
+    inject: false,
     clientManifest
   })
-  const context = { url: ctx.url }
-  // 错误写法，里面非同步，ctx赋值不了
-  // renderer.renderToString(context, (err, html) => {
-  //   if (err) throw err
-  //   ctx.body = html
-  // })
-  try {
-    let html = await renderer.renderToString(context)
-    ctx.body = html
-  } catch (error) {
-    console.log('render error', err)
-  }
+
+  await templateRender(ctx, renderer)
 }
 
 const router = new Router()
