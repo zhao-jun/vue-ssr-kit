@@ -1,6 +1,7 @@
 const Router = require('koa-router')
 const webpack = require('webpack')
-const fs = require('fs')
+// const fs = require('fs')
+const chalk = require('chalk')
 const MemoryFS = require('memory-fs')
 const axios = require('axios')
 const path = require('path')
@@ -76,8 +77,11 @@ const handleSSR = async ctx => {
     inject: false,
     clientManifest
   })
-
-  await templateRender(ctx, renderer)
+  try {
+    await templateRender(ctx, renderer)
+  } catch (error) {
+    console.log(chalk.blue.bgRed.bold(error))
+  }
 }
 
 const router = new Router()

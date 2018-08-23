@@ -3,6 +3,8 @@ const send = require('koa-send')
 const path = require('path')
 const render = require('koa-art-template')
 
+const apiRouter = require('./routers/api')
+
 const app = new Koa()
 
 // 可以使用ejs等其他模版
@@ -20,9 +22,9 @@ app.use(async (ctx, next) => {
     await next()
   }
 })
+app.use(apiRouter.routes()).use(apiRouter.allowedMethods())
 
 let pageRouter = require('./routers/dev-ssr')
-
 app.use(pageRouter.routes()).use(pageRouter.allowedMethods())
 
 const HOST = process.env.HOST || '127.0.0.1'

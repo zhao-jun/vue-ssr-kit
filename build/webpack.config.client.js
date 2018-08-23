@@ -40,7 +40,11 @@ const devServer = {
   overlay: {
     errors: true
   },
-  hot: true
+  hot: true,
+  headers: { 'Access-Control-Allow-Origin': '*' },
+  proxy: {
+    '/api': 'http://127.0.0.1:3030'
+  },
 }
 
 let config
