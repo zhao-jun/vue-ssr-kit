@@ -9,7 +9,7 @@ export default (type, url, param = {}) => {
   return new Promise((resolve, reject) => {
     axios.create({
       baseURL: Config.baseURL
-    })[type]('/home/list', param).then(res => {
+    })[type](url, param).then(res => {
       let response = res.data
       if (+response.code === 0) {
         resolve(response.data)

@@ -42,6 +42,9 @@ const devServer = {
   },
   hot: true,
   headers: { 'Access-Control-Allow-Origin': '*' },
+  historyApiFallback: {
+    index: '/index.html'
+  },
   proxy: {
     '/api': 'http://127.0.0.1:3030'
   },
