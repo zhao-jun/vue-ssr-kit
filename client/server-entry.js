@@ -23,6 +23,8 @@ export default context =>
       })).then(_ => {
         // 将已经渲染好的状态store放入上下文
         context.state = store.state
+        // todo 存在问题：如果不存在title的时候要设置默认title
+        context.title = router.currentRoute.meta.title || 'Document'
         resolve(app)
       })
     })

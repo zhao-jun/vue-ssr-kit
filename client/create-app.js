@@ -31,7 +31,9 @@ Vue.use(Vuex)
 //     }
 //   })
 // }
-
+// function a () {
+//   document.title = '123'
+// }
 // 解决路由组件重用asyncData执行问题
 Vue.mixin({
   beforeRouteUpdate (to, from, next) {
@@ -44,6 +46,16 @@ Vue.mixin({
     } else {
       next()
     }
+  },
+  // todo title修改
+  beforeRouteEnter (to, from, next) {
+    /* 路由发生变化修改页面title */
+    if (!to.meta.title) next()
+    if (process.env.VUE_ENV === 'server') {
+    } else {
+      document.title = to.meta.title
+    }
+    next()
   }
 })
 
