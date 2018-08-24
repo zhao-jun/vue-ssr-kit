@@ -3,7 +3,6 @@ const webpack = require('webpack')
 const webpackMerge = require('webpack-merge')
 const VueSSRServerPlugin = require('vue-server-renderer/server-plugin')
 const VueLoaderPlugin = require('vue-loader/lib/plugin') // vue-loader v15新增
-const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin')
 const basicConfig = require('./webpack.config.base')
 
 // 服务器配置，是用于生成传递给 VueServerRenderer.createBundleRenderer 的 server bundle
@@ -11,9 +10,9 @@ const basicConfig = require('./webpack.config.base')
 const isDev = process.env.NODE_ENV === 'development'
 
 // css module开发和生产命名区分
-const localIdentName = isDev
-  ? '[path][name]-[local]-[hash:base64:5]'
-  : '[hash:base64:5]'
+// const localIdentName = isDev
+// ? '[path][name]-[local]-[hash:base64:5]'
+// : '[hash:base64:5]'
 
 // 便于以后统一修改路径
 function resolve(dir) {
@@ -30,7 +29,6 @@ const plugins = [
       VUE_ENV: '"server"'
     }
   }),
-  new ExtractTextWebpackPlugin('styles.[hash:8].css'),
   // 将服务端的整个输出，生成vue-ssr-server-bundle.json
   new VueSSRServerPlugin()
 ]
@@ -54,21 +52,13 @@ module.exports = webpackMerge(basicConfig, {
     rules: [
       {
         test: /\.less$/,
-        use: ExtractTextWebpackPlugin.extract({
-          fallback: 'vue-style-loader',
-          use: [
-            {
-              loader: 'css-loader',
-              options: {
-                modules: true,
-                localIdentName,
-                camelCase: true // 驼峰
-              }
-            },
-            'postcss-loader',
-            'less-loader'
-          ]
-        }),
+        use: [
+          // 不用提取，直接引入客户端打包静态
+          'vue-style-loader',
+          'css-loader',
+          'postcss-loader',
+          'less-loader'
+        ],
         include: [resolve('client'), resolve('test')]
       }
     ]

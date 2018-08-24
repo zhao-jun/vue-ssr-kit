@@ -4,7 +4,7 @@ const webpackMerge = require('webpack-merge')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
 const VueLoaderPlugin = require('vue-loader/lib/plugin') // vue-loader v15新增
-const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const basicConfig = require('./webpack.config.base')
 
 const isDev = process.env.NODE_ENV === 'development'
@@ -97,21 +97,22 @@ if (isDev) {
         {
           test: /\.less$/,
           // 生产环境提取css
-          use: ExtractTextWebpackPlugin.extract({
-            fallback: 'vue-style-loader',
-            use: [
-              {
-                loader: 'css-loader',
-                options: {
-                  modules: true,
-                  localIdentName,
-                  camelCase: true // 驼峰
-                }
-              },
-              'postcss-loader',
-              'less-loader'
-            ]
-          }),
+          use: [
+            process.env.NODE_ENV !== 'production'
+            ? 'vue-style-loader'
+            : MiniCssExtractPlugin.loader,
+            // 原来vue-loader css-module配置移到这
+            {
+              loader: 'css-loader',
+              options: {
+                modules: true,
+                localIdentName,
+                camelCase: true // 驼峰
+              }
+            },
+            'postcss-loader',
+            'less-loader'
+          ],
           include: [resolve('client'), resolve('test')]
         }
       ]
@@ -126,7 +127,10 @@ if (isDev) {
       }
     },
     plugins: defaultPlugins.concat([
-      new ExtractTextWebpackPlugin('styles.[hash:8].css')
+      // new ExtractTextWebpackPlugin('styles.[hash:8].css')
+      new MiniCssExtractPlugin({
+        filename: 'styles.[hash:8].css'
+      })
     ])
   })
 }

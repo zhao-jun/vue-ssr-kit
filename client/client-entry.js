@@ -6,6 +6,27 @@ const { app, router, store } = createApp()
 if (window.__INITIAL_STATE__) {
   store.replaceState(window.__INITIAL_STATE__)
 }
+// 开发环境客户端第一次asyncData执行
+if (process.env.NODE_ENV === 'development' && window.location.port === '8000') {
+  router.beforeResolve((to, from, next) => {
+    const matched = router.getMatchedComponents(to)
+    const prevMatched = router.getMatchedComponents(from)
+    let diffed = false
+    const activated = matched.filter((c, i) => {
+      return diffed || (diffed = (prevMatched[i] !== c))
+    })
+    if (!activated.length) {
+      return next()
+    }
+    Promise.all(activated.map(c => {
+      if (c.asyncData) {
+        return c.asyncData({ store, route: to })
+      }
+    })).then(() => {
+      next()
+    }).catch(next)
+  })
+}
 
 // 此处采用模版，新建root dom会导致挂载两次
 router.onReady(() => {
