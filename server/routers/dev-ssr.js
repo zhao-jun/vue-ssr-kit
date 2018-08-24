@@ -44,7 +44,7 @@ const handleSSR = async ctx => {
   // vue-ssr-client-manifest.json在内存中，直接获取不到
   // const clientManifest = require('../../client-dist/vue-ssr-client-manifest.json')
   const clientManifestResp = await axios.get(
-    `http://127.0.0.1:8000/vue-ssr-client-manifest.json`
+    `http://127.0.0.1:8000/public/vue-ssr-client-manifest.json`
   )
   const clientManifest = clientManifestResp.data
 
@@ -73,6 +73,7 @@ const handleSSR = async ctx => {
   //   console.log('render error', error)
   // }
   // 手动注入
+  // bundle可以接受绝对路径、bundle 对象，此处没有绝对路径，所以传入bundle对象
   const renderer = createBundleRenderer(bundle, {
     inject: false,
     clientManifest

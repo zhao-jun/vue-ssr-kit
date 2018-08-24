@@ -14,8 +14,10 @@ module.exports = {
   entry: resolve('client/client-entry.js'),
   output: {
     filename: 'bundle.js',
-    path: resolve('client-dist'),
-    publicPath: 'http://127.0.0.1:8000/'
+    path: resolve('client-dist/public'),
+    publicPath: 'http://127.0.0.1:8000/public'
+    // 两种写法都可以
+    // publicPath: '/public/'
   },
   module: {
     rules: [

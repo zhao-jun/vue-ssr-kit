@@ -6,15 +6,16 @@
   "scripts": {
     "build:client": "cross-env NODE_ENV=production webpack --config build/webpack.config.client.js",
     "build:server": "cross-env NODE_ENV=production webpack --config build/webpack.config.server.js",
-    "clean": "rimraf dist",
-    "build": "yarn run clean && yarn run build:client",
+    "clean": "rimraf client-dist && rimraf server-dist",
+    "build": "yarn run clean && yarn run build:client && yarn run build:server",
     "dev:client": "cross-env NODE_ENV=development webpack-dev-server --config build/webpack.config.client.js",
     "dev:server": "nodemon server/server.js",
     "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
     "commit": "npm install -g commitizen && commitizen init cz-conventional-changelog --save-dev --save-exact",
     "lint": "eslint --ext .js --ext .jsx --ext .vue .",
     "lint-fix": "eslint --fix --ext .js --ext .jsx --ext .vue .",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "start": "cross-env NODE_ENV=production node server/server.js"
   },
   "repository": "https://github.com/zhao-jun/vue-ssr-kit.git",
   "author": "zhao-jun",

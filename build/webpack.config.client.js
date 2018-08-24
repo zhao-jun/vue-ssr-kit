@@ -43,7 +43,7 @@ const devServer = {
   hot: true,
   headers: { 'Access-Control-Allow-Origin': '*' },
   historyApiFallback: {
-    index: '/index.html'
+    index: '/public/index.html'
   },
   proxy: {
     '/api': 'http://127.0.0.1:3030'
@@ -90,7 +90,9 @@ if (isDev) {
     },
     output: {
       // 打包的时候使用chunkhash，hash所有打包文件hash值相同，其中一个文件改变就全部改变，不利于缓存
-      filename: '[name].[chunkhash:8].js'
+      filename: '[name].[chunkhash:8].js',
+      // 引用路径，node端做处理
+      publicPath: '/public/'
     },
     module: {
       rules: [
@@ -129,7 +131,7 @@ if (isDev) {
     plugins: defaultPlugins.concat([
       // new ExtractTextWebpackPlugin('styles.[hash:8].css')
       new MiniCssExtractPlugin({
-        filename: 'styles.[hash:8].css'
+        filename: 'styles.[chunkhash:8].css'
       })
     ])
   })

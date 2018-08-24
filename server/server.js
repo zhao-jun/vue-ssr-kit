@@ -4,6 +4,7 @@ const path = require('path')
 const render = require('koa-art-template')
 
 const apiRouter = require('./routers/api')
+const staticRouter = require('./routers/static')
 
 const app = new Koa()
 
@@ -14,6 +15,8 @@ render(app, {
   debug: process.env.NODE_ENV !== 'production'
 })
 
+const isDev = process.env.NODE_ENV === 'development'
+
 // favicon处理
 app.use(async (ctx, next) => {
   if (ctx.path === '/favicon.ico') {
@@ -22,9 +25,16 @@ app.use(async (ctx, next) => {
     await next()
   }
 })
+app.use(staticRouter.routes()).use(staticRouter.allowedMethods())
 app.use(apiRouter.routes()).use(apiRouter.allowedMethods())
 
-let pageRouter = require('./routers/dev-ssr')
+let pageRouter
+if (isDev) {
+  pageRouter = require('./routers/dev-ssr')
+} else {
+  pageRouter = require('./routers/ssr')
+}
+
 app.use(pageRouter.routes()).use(pageRouter.allowedMethods())
 
 const HOST = process.env.HOST || '127.0.0.1'
