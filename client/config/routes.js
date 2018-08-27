@@ -3,7 +3,6 @@ export default [
     path: '/test/:id?',
     component: () => import('../views/test.vue'),
     name: 'test',
-    props: true,
     meta: {
       title: 'test'
     }
@@ -16,5 +15,17 @@ export default [
     meta: {
       title: 'home'
     }
+  },
+  {
+    path: '/404',
+    component: () => import('../views/not-found.vue'),
+    name: '404',
+    meta: {
+      title: '404'
+    }
+  },
+  {
+    path: '*',
+    redirect: '/404'
   }
 ]

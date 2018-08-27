@@ -15,7 +15,6 @@ export default {
   props: ['id'],
   asyncData () {
     return new Promise((resolve) => {
-      console.log('test')
       resolve()
     })
   }
