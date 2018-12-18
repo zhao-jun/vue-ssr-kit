@@ -1,4 +1,3 @@
-const Router = require('koa-router')
 const webpack = require('webpack')
 // const fs = require('fs')
 const chalk = require('chalk')
@@ -35,7 +34,7 @@ serverCompiler.watch({}, (err, stats) => {
   console.log('bundle generated')
 })
 
-const handleSSR = async ctx => {
+module.exports = async ctx => {
   // 服务端初次打包未结束
   if (!bundle) {
     ctx.body = 'bundle 正在打包中...'
@@ -84,8 +83,3 @@ const handleSSR = async ctx => {
     console.log(chalk.blue.bgRed.bold(error))
   }
 }
-
-const router = new Router()
-router.get('*', handleSSR)
-
-module.exports = router
